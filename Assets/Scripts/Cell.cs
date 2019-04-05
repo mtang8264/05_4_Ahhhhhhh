@@ -7,17 +7,94 @@ public class Cell : MonoBehaviour
     public Vector2Int pos;
     public enum Type { RED, ORANGE, BLUE, YELLOW, GREEN, PURPLE, POINT };
     public Type type;
+    SpriteRenderer rend;
+    public static float fastLerpAmount = 0.25f;
+    public static float slowLerpAmoutn = 0.09f;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        rend = GetComponent<SpriteRenderer>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        Vector3 goalPos = new Vector3(pos.x + Grid.me.offset.x, pos.y + Grid.me.offset.y);
-        transform.position = Vector3.Lerp(transform.position, goalPos, 0.1f);
+        Move();
+        ColorUpdate();
+        TryFall();
+    }
+
+    void TryFall()
+    {
+        if (pos.y == 0)
+            return;
+        if(Grid.me.GetCell(pos.x,pos.y-1) == null)
+        {
+            pos = new Vector2Int(pos.x, pos.y - 1);
+        }
+    }
+    public void Unassign()
+    {
+        Randomize();
+        pos = new Vector2Int(pos.x, pos.y + 10  );
+        transform.position = new Vector3((float)pos.x + Grid.me.offset.x, pos.y);
+        Grid.me.movesLeft = 6;
+        Grid.me.score++;
+    }
+
+    public void SetPos(Vector2Int p)
+    {
+        pos = p;
+    }
+    public void SetPos(int x, int y)
+    {
+        pos = new Vector2Int(x, y);
+    }
+    void ColorUpdate()
+    {
+        switch(type)
+        {
+            case Type.BLUE:
+                rend.color = Grid.me.blue;
+                break;
+            case Type.GREEN:
+                rend.color = Grid.me.green;
+                break;
+            case Type.ORANGE:
+                rend.color = Grid.me.orange;
+                break;
+            case Type.PURPLE:
+                rend.color = Grid.me.purple;
+                break;
+            case Type.RED:
+                rend.color = Grid.me.red;
+                break;
+            case Type.YELLOW:
+                rend.color = Grid.me.yellow;
+                break;
+            case Type.POINT:
+                rend.color = new Color(0, 0, 0, 0);
+                break;
+        }
+    }
+
+    void Move()
+    {
+        Vector3 goalPos = new Vector3(pos.x * Grid.me.spacing + Grid.me.offset.x, pos.y * Grid.me.spacing + Grid.me.offset.y);
+        if (transform.position.y > 3.75f)
+        {
+            transform.position = Vector3.Lerp(transform.position, goalPos, slowLerpAmoutn);
+        }
+        else
+        {
+            transform.position = Vector3.Lerp(transform.position, goalPos, fastLerpAmount);
+        }
+    }
+
+    public void Randomize()
+    {
+        int sel = Random.Range(0, 6);
+        type = (Type)sel;
     }
 }
