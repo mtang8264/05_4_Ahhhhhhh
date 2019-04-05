@@ -18,6 +18,7 @@ public class Grid : MonoBehaviour
     public TextMeshPro movesLeftText;
     public TextMeshPro scoreText;
     public TextMeshPro loseText;
+    public bool checkFlag;
 
     [Header("COLORS")]
     public Color red;
@@ -32,6 +33,7 @@ public class Grid : MonoBehaviour
     private void Awake()
     {
         me = this;
+        checkFlag = true;
     }
 
     // Start is called before the first frame update
@@ -46,13 +48,13 @@ public class Grid : MonoBehaviour
     void Update()
     {
         InputStuff();
-        DestroyMatches();
+        if(checkFlag)
+            DestroyMatches();
 
         movesLeftText.text = "" + movesLeft;
         scoreText.text = "Score: " + score;
         Lose();
     }
-
 
     void Lose()
     {

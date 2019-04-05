@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 4685954874324434521}
   - component: {fileID: 4685954874324434518}
   m_Layer: 0
-  m_Name: Square
+  m_Name: Cell
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -93,4 +93,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   pos: {x: 0, y: 0}
+  goalWorldPos: {x: 0, y: 0, z: 0}
   type: 0
+  atDesiredPosition: 0
