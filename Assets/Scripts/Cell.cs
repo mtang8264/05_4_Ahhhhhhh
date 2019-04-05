@@ -6,12 +6,14 @@ public class Cell : MonoBehaviour
 {
     public Vector2Int pos;
     public Vector3 goalWorldPos;
+    public Vector3 frameGoal;
     public enum Type { RED, ORANGE, BLUE, YELLOW, GREEN, PURPLE, POINT };
     public Type type;
     SpriteRenderer rend;
-    public static float fastLerpAmount = 0.25f;
-    public static float slowLerpAmoutn = 0.05f;
-    public static float lerpVariance = 0.01f;
+    public float lerpAmount = 0.05f;
+    public static float high = 0.1f;
+    public static float low = 0.05f;
+    public static float lerpDamp = 0.8f;
     public bool atDesiredPosition;
 
     // Start is called before the first frame update
@@ -26,7 +28,6 @@ public class Cell : MonoBehaviour
     void Update()
     {
         Move();
-        Stretch();
         ColorUpdate();
         TryFall();
     }
@@ -89,19 +90,10 @@ public class Cell : MonoBehaviour
     void Move()
     {
         goalWorldPos = new Vector3(pos.x * Grid.me.spacing + Grid.me.offset.x, pos.y * Grid.me.spacing + Grid.me.offset.y);
-        if (transform.position.y > 3.75f)
-        {
-            transform.position = Vector3.Lerp(transform.position, goalWorldPos, Random.Range(slowLerpAmoutn - lerpVariance, slowLerpAmoutn + lerpVariance));
-        }
-        else
-        {
-            transform.position = Vector3.Lerp(transform.position, goalWorldPos, Random.Range(fastLerpAmount -lerpVariance, fastLerpAmount + lerpVariance));
-        }
+        frameGoal += transform.position - Vector3.Lerp(transform.position, goalWorldPos, lerpAmount);
+        frameGoal *= lerpDamp;
+        transform.position -= frameGoal;
         atDesiredPosition = transform.position == goalWorldPos;
-    }
-    void Stretch()
-    {
-
     }
 
     public void Randomize()
