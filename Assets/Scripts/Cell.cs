@@ -50,6 +50,7 @@ public class Cell : MonoBehaviour
         transform.position = new Vector3((float)pos.x + Grid.me.offset.x, pos.y);
         Grid.me.movesLeft = 6;
         Grid.me.score++;
+        CameraControl.me.cellsDestroyed++;
     }
 
     public void SetPos(Vector2Int p)
