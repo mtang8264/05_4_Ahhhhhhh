@@ -10,11 +10,12 @@ public class Cell : MonoBehaviour
     public enum Type { RED, ORANGE, BLUE, YELLOW, GREEN, PURPLE, POINT };
     public Type type;
     SpriteRenderer rend;
-    public float lerpAmount = 0.05f;
-    public static float high = 0.1f;
-    public static float low = 0.05f;
-    public static float lerpDamp = 0.8f;
+    public float lerpAmount = 0.1f;
+    public static float lerpDamp = 0.73f;
+    public static float stretchMulti = 2f;
+    public static float stretchReductionMulti = 0.75f;
     public bool atDesiredPosition;
+    public bool debug;
 
     // Start is called before the first frame update
     void Start()
@@ -94,6 +95,8 @@ public class Cell : MonoBehaviour
         frameGoal *= lerpDamp;
         transform.position -= frameGoal;
         atDesiredPosition = transform.position == goalWorldPos;
+        transform.localScale = new Vector3(1 + Mathf.Abs(frameGoal.x) * stretchMulti - Mathf.Abs(frameGoal.y) * stretchReductionMulti,
+                                           1 + Mathf.Abs(frameGoal.y)* stretchMulti - Mathf.Abs(frameGoal.x) * stretchReductionMulti);
     }
 
     public void Randomize()
