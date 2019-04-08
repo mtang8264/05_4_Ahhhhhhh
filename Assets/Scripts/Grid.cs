@@ -17,6 +17,7 @@ public class Grid : MonoBehaviour
     public GameObject cellPrefab;
     public TextMeshPro movesLeftText;
     public TextMeshPro scoreText;
+    public SpriteRenderer pointSprite;
     public TextMeshPro loseText;
     public bool checkFlag;
 
@@ -27,6 +28,7 @@ public class Grid : MonoBehaviour
     public Color green;
     public Color yellow;
     public Color orange;
+    public Gradient pointColor;
 
     private Vector2Int pointerPlace = new Vector2Int(2, 3);
 
@@ -52,6 +54,8 @@ public class Grid : MonoBehaviour
             DestroyMatches();
 
         movesLeftText.text = "" + movesLeft;
+        movesLeftText.color = pointColor.Evaluate(movesLeft/6f);
+        pointSprite.color = pointColor.Evaluate(movesLeft / 6f);
         scoreText.text = "Score: " + score;
         Lose();
     }

@@ -32,7 +32,17 @@ public class ParticleManager : MonoBehaviour
             {
                 GameObject temp = Instantiate(t.particle, transform);
                 temp.transform.position = pos.position;
-                temp.GetComponent<ParticleSystem>().Play();
+            }
+        }
+    }
+    public void PlayParticle(string p)
+    {
+        foreach (ParticleType t in particles)
+        {
+            if (t.name.ToLower() == p.ToLower())
+            {
+                GameObject temp = Instantiate(t.particle, transform);
+                temp.transform.position = Vector3.zero;
             }
         }
     }

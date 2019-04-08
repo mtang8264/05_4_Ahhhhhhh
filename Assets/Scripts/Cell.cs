@@ -17,12 +17,26 @@ public class Cell : MonoBehaviour
     public bool atDesiredPosition;
     public bool debug;
 
+    [Header("ROTATION TOWN")]
+    private float averageRotation = 10;
+    private float rotationVariance = 0.2f;
+    private float currentRotation;
+    private bool direction;
+    private float averageSpeed = 5;
+    private float speedVariance = 0.9f;
+    private float currentSpeed;
+    public static bool doRotate = false;
+
     // Start is called before the first frame update
     void Start()
     {
         rend = GetComponent<SpriteRenderer>();
         Move();
         transform.position = new Vector3(goalWorldPos.x, goalWorldPos.y + 20);
+
+        currentRotation = Random.Range(averageRotation - rotationVariance, averageRotation + rotationVariance);
+        currentSpeed = Random.Range(averageSpeed - speedVariance, averageSpeed + speedVariance);
+        direction = Random.value < 0.5f;
     }
 
     // Update is called once per frame
@@ -31,6 +45,20 @@ public class Cell : MonoBehaviour
         Move();
         ColorUpdate();
         TryFall();
+
+        if(doRotate)
+            Rotate();
+    }
+
+    void Rotate()
+    {
+        transform.Rotate(new Vector3(0, 0, direction ? currentSpeed * Time.deltaTime : -currentSpeed * Time.deltaTime));
+        if((transform.rotation.eulerAngles.z > currentRotation) || (transform.rotation.eulerAngles.z < 360 - currentRotation))
+        {
+            currentRotation = Random.Range(averageRotation - rotationVariance, averageRotation + rotationVariance);
+            currentSpeed = Random.Range(averageSpeed - speedVariance, averageSpeed + speedVariance);
+            direction = !direction;
+        }
     }
 
     void TryFall()

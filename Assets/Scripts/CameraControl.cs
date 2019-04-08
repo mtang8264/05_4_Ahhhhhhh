@@ -26,6 +26,18 @@ public class CameraControl : MonoBehaviour
         if (cellsDestroyed > 0)
         {
             timer = cellsDestroyed / 3f / 5f;
+            if(cellsDestroyed > 3)
+            {
+                ParticleManager.me.PlayParticle("ClamCanon");
+            }
+            if(cellsDestroyed > 4)
+            {
+                ParticleManager.me.PlayParticle("TomatoCanon");
+            }
+            if(cellsDestroyed > 5)
+            {
+                ParticleManager.me.PlayParticle("ClamatoCanon");
+            }
             cellsDestroyed = 0;
         }
         if(timer >= 0)
