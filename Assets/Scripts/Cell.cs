@@ -7,7 +7,7 @@ public class Cell : MonoBehaviour
     public Vector2Int pos;
     public Vector3 goalWorldPos;
     public Vector3 frameGoal;
-    public enum Type { RED, ORANGE, BLUE, YELLOW, GREEN, PURPLE, POINT };
+    public enum Type { RED, BLUE, YELLOW, GREEN, POINT };
     public Type type;
     SpriteRenderer rend;
     public float lerpAmount = 0.1f;
@@ -72,13 +72,32 @@ public class Cell : MonoBehaviour
     }
     public void Unassign()
     {
+        switch (type)
+        {
+            case Type.BLUE:
+                Grid.me.blueClear++;
+                Debug.Log("Blue");
+                break;
+            case Type.GREEN:
+                Grid.me.greenClear++;
+                Debug.Log("Green");
+                break;
+            case Type.RED:
+                Grid.me.redClear++;
+                Debug.Log("Red");
+                break;
+            case Type.YELLOW:
+                Grid.me.yellowClear++;
+                Debug.Log("Yellow");
+                break;
+        }
         ParticleManager.me.Explode(transform);
         Randomize();
         pos = new Vector2Int(pos.x, pos.y + 10  );
         transform.position = new Vector3((float)pos.x + Grid.me.offset.x, pos.y);
-        Grid.me.movesLeft = 6;
-        Grid.me.score++;
         CameraControl.me.cellsDestroyed++;
+
+
     }
 
     public void SetPos(Vector2Int p)
@@ -98,12 +117,6 @@ public class Cell : MonoBehaviour
                 break;
             case Type.GREEN:
                 rend.color = Grid.me.green;
-                break;
-            case Type.ORANGE:
-                rend.color = Grid.me.orange;
-                break;
-            case Type.PURPLE:
-                rend.color = Grid.me.purple;
                 break;
             case Type.RED:
                 rend.color = Grid.me.red;
@@ -130,7 +143,7 @@ public class Cell : MonoBehaviour
 
     public void Randomize()
     {
-        int sel = Random.Range(0, 6);
+        int sel = Random.Range(0, 4);
         type = (Type)sel;
     }
 }

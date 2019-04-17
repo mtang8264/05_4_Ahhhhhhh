@@ -16,9 +16,7 @@ public class Grid : MonoBehaviour
     public float spacing;
     public GameObject cellPrefab;
     public TextMeshPro movesLeftText;
-    public TextMeshPro scoreText;
     public SpriteRenderer pointSprite;
-    public TextMeshPro loseText;
     public bool checkFlag;
 
     [Header("COLORS")]
@@ -30,7 +28,20 @@ public class Grid : MonoBehaviour
     public Color orange;
     public Gradient pointColor;
 
-    private Vector2Int pointerPlace = new Vector2Int(2, 3);
+    [Header("RPG STATS")]
+    public int playerHealth;
+    public int enemyHealth;
+    public int playerDamage;
+    public int redClear, blueClear, yellowClear, greenClear;
+
+    [Header("RPG START STATS")]
+    public int playerStartHealth;
+    public int enemyStartHealth;
+    public int playerStartDamage;
+    public int enemyDamage;
+    public int healPerCube;
+
+    private Vector2Int pointerPlace = new Vector2Int(2, 2);
 
     private void Awake()
     {
@@ -44,6 +55,7 @@ public class Grid : MonoBehaviour
         InitGrid();
         StartMatchCheck();
         PlacePointer(pointerPlace.x, pointerPlace.y);
+        RPGSetup();
     }
 
     // Update is called once per frame
@@ -56,18 +68,47 @@ public class Grid : MonoBehaviour
         movesLeftText.text = "" + movesLeft;
         movesLeftText.color = pointColor.Evaluate(movesLeft/6f);
         pointSprite.color = pointColor.Evaluate(movesLeft / 6f);
-        scoreText.text = "Score: " + score;
-        Lose();
+        CubeChecks();
+        MoveCheck();
     }
 
-    void Lose()
+
+    void MoveCheck()
     {
         if(movesLeft <= 0)
         {
-            loseText.enabled = true;
-            Destroy(this);
+            movesLeft = 6;
+            playerHealth -= enemyDamage;
+        }
+        if (playerHealth > playerStartHealth)
+            playerHealth = playerStartHealth;
+    }
+    void CubeChecks()
+    {
+        if(yellowClear > 0)
+        {
+            yellowClear = 0;
+            playerDamage++;
+        }
+        if(redClear > 0)
+        {
+            enemyHealth -= redClear * playerDamage;
+            redClear = 0;
+        }
+        if(greenClear >0)
+        {
+            playerHealth += greenClear * healPerCube;
+            greenClear = 0;
         }
     }
+    void RPGSetup()
+    {
+        playerHealth = playerStartHealth;
+        enemyHealth = enemyStartHealth;
+        playerDamage = playerStartDamage;
+        redClear = blueClear = yellowClear = greenClear = 0;
+    }
+
     void InputStuff()
     {
         Cell point = FindPointer();
