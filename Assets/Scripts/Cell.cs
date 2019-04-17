@@ -113,16 +113,16 @@ public class Cell : MonoBehaviour
         switch(type)
         {
             case Type.BLUE:
-                rend.color = Grid.me.blue;
+                rend.sprite = Grid.me.shield;
                 break;
             case Type.GREEN:
-                rend.color = Grid.me.green;
+                rend.sprite = Grid.me.cross;
                 break;
             case Type.RED:
-                rend.color = Grid.me.red;
+                rend.sprite = Grid.me.sword;
                 break;
             case Type.YELLOW:
-                rend.color = Grid.me.yellow;
+                rend.sprite = Grid.me.arrow;
                 break;
             case Type.POINT:
                 rend.color = new Color(0, 0, 0, 0);

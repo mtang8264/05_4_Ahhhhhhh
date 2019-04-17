@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
+using TMPro;
 
 public class Grid : MonoBehaviour
 {
@@ -20,12 +22,10 @@ public class Grid : MonoBehaviour
     public bool checkFlag;
 
     [Header("COLORS")]
-    public Color red;
-    public Color blue;
-    public Color purple;
-    public Color green;
-    public Color yellow;
-    public Color orange;
+    public Sprite sword;
+    public Sprite shield;
+    public Sprite cross;
+    public Sprite arrow;
     public Gradient pointColor;
 
     [Header("RPG STATS")]
@@ -33,6 +33,7 @@ public class Grid : MonoBehaviour
     public int enemyHealth;
     public int playerDamage;
     public int redClear, blueClear, yellowClear, greenClear;
+    public int shields;
 
     [Header("RPG START STATS")]
     public int playerStartHealth;
@@ -40,6 +41,13 @@ public class Grid : MonoBehaviour
     public int playerStartDamage;
     public int enemyDamage;
     public int healPerCube;
+
+    [Header("UI")]
+    public Slider playerHealthBar;
+    public Slider enemyHealthBar;
+    public SpriteRenderer shield0, shield1, shield2;
+    public TextMeshPro playerhealthtext, enemyhealthtext;
+    public SpriteRenderer sword0, sword1, sword2;
 
     private Vector2Int pointerPlace = new Vector2Int(2, 2);
 
@@ -78,10 +86,39 @@ public class Grid : MonoBehaviour
         if(movesLeft <= 0)
         {
             movesLeft = 6;
-            playerHealth -= enemyDamage;
+            if (shields > 0)
+            {
+                playerHealth -= enemyDamage / 2;
+                shields--;
+            }
+            else
+            {
+                playerHealth -= enemyDamage;
+            }
         }
         if (playerHealth > playerStartHealth)
             playerHealth = playerStartHealth;
+
+        playerHealthBar.value = ((float)playerHealth / (float)playerStartHealth);
+        enemyHealthBar.value = ((float)enemyHealth / (float)enemyStartHealth);
+
+        if(shields > 3)
+        {
+            shields = 3;
+        }
+        shield0.enabled = shields > 0;
+        shield1.enabled = shields > 1;
+        shield2.enabled = shields > 2;
+        playerhealthtext.text = "" + playerHealth;
+        enemyhealthtext.text = "" + enemyHealth;
+
+        if(playerDamage > 4)
+        {
+            playerDamage = 4;
+        }
+        sword0.enabled = playerDamage > 1;
+        sword1.enabled = playerDamage > 2;
+        sword2.enabled = playerDamage > 3;
     }
     void CubeChecks()
     {
@@ -94,11 +131,17 @@ public class Grid : MonoBehaviour
         {
             enemyHealth -= redClear * playerDamage;
             redClear = 0;
+            playerDamage = 1;
         }
         if(greenClear >0)
         {
             playerHealth += greenClear * healPerCube;
             greenClear = 0;
+        }
+        if(blueClear > 0)
+        {
+            shields++;
+            blueClear = 0;
         }
     }
     void RPGSetup()
